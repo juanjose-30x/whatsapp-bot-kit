@@ -833,7 +833,13 @@ def main() -> None:
     """Console-script entry point. Wired in pyproject.toml [project.scripts]
     so `uvx adelaidasofia-whatsapp-mcp` launches the server, and exposed for
     direct invocation via `python -m main` or `python main.py`."""
-    mcp.run()
+    # Kit Grokbot: con WHATSAPP_MCP_HTTP_PORT el servidor se expone por URL
+    # (http://127.0.0.1:<puerto>/mcp) para clientes que conectan MCP por URL.
+    _http_port = os.environ.get("WHATSAPP_MCP_HTTP_PORT", "").strip()
+    if _http_port:
+        mcp.run(transport="http", host="127.0.0.1", port=int(_http_port))
+    else:
+        mcp.run()
 
 
 if __name__ == "__main__":

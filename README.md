@@ -15,15 +15,13 @@ Deja una línea de WhatsApp conectada a Grokbot con el mismo MCP que ya usamos (
 2. Aparece un QR. En el teléfono de la línea: WhatsApp > Dispositivos vinculados > Vincular un dispositivo.
 3. Si macOS pide acceso al Llavero, elige **Permitir siempre**.
 4. Cuando quede conectado, cierra con Ctrl+C y corre `cd ~/whatsapp-bot-kit-main && ./instalar.sh servicio`. Debe decir `Conectado: True`.
-5. Corre `./instalar.sh mcp` y pega ese bloque en Grokbot, donde se agregan servidores MCP.
+5. En Grokbot, agrega un conector MCP personalizado por URL con `http://127.0.0.1:8091/mcp`. No pide clave ni inicio de sesión.
 6. Prueba: pídele a Grokbot que liste los últimos chats de WhatsApp.
 
 Todo queda en `~/whatsapp-grokbot`. Registro: `~/whatsapp-grokbot/bridge.out`.
 
-## Si Grokbot no acepta servidores MCP locales
-El puente responde en `http://127.0.0.1:8090` y Grokbot lo puede usar con comandos locales:
-- Leer: `curl "http://127.0.0.1:8090/api/messages?chat_jid=<numero>@s.whatsapp.net&limit=20"`
-- Enviar (dos pasos): `POST /api/sends` con `{"recipient_jid","send_type":"text","text"}` y luego `POST /api/sends/<draft_id>/confirm`.
+## Otros clientes MCP
+`./instalar.sh servicio` deja dos servicios: el puente de WhatsApp (puerto 8090) y el conector MCP por URL (puerto 8091). Los dos escuchan solo dentro de la Mac. Para un cliente que use comando en vez de URL: `uv --directory ~/whatsapp-grokbot/mcp-server run main.py` con `WHATSAPP_BRIDGE_PORT=8090`.
 
 ## Dos computadores (arriba y abajo)
 Se instala en los dos: cada uno corre `./instalar.sh` y escanea su propio QR (WhatsApp permite hasta 4 dispositivos vinculados). Si se programa una respuesta automática, que quede en uno solo; si no, el bot responde doble.

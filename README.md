@@ -20,6 +20,14 @@ Deja una línea de WhatsApp conectada a Grokbot con el mismo MCP que ya usamos (
 
 Todo queda en `~/whatsapp-grokbot`. Registro: `~/whatsapp-grokbot/bridge.out`.
 
+## Que el bot responda solo (avisos)
+El conector solo le da herramientas a Grokbot; para que se active cuando entra un mensaje hay que encender los avisos:
+1. Pídele a Grokbot un webhook (una URL pública que lo activa).
+2. Corre `./instalar.sh avisos <URL>`. Queda un tercer servicio que revisa el puente cada 10 segundos y le envía a esa URL cada mensaje entrante nuevo (chat, nombre y texto).
+3. Para limitar quién activa al bot, escribe los números permitidos en `~/whatsapp-grokbot/permitidos.txt`, uno por línea. Vacío = cualquiera.
+
+Los grupos no generan aviso. Enciende los avisos en **un solo computador**. La URL del webhook es una llave: quien la tenga puede activar al bot.
+
 ## Otros clientes MCP
 `./instalar.sh servicio` deja dos servicios: el puente de WhatsApp (puerto 8090) y el conector MCP por URL (puerto 8091). Los dos escuchan solo dentro de la Mac. Para un cliente que use comando en vez de URL: `uv --directory ~/whatsapp-grokbot/mcp-server run main.py` con `WHATSAPP_BRIDGE_PORT=8090`.
 

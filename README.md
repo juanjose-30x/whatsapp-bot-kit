@@ -13,7 +13,6 @@ Deja una línea de WhatsApp conectada a Grokbot con el mismo MCP que ya usamos (
    ```
    - Si dice que falta `uv`, corre el comando que muestra y repite.
 2. Aparece un QR. En el teléfono de la línea: WhatsApp > Dispositivos vinculados > Vincular un dispositivo.
-3. Si macOS pide acceso al Llavero, elige **Permitir siempre**.
 4. Cuando quede conectado, cierra con Ctrl+C y corre `cd ~/whatsapp-bot-kit-main && ./instalar.sh servicio`. Debe decir `Conectado: True`.
 5. En Grokbot, agrega un conector MCP personalizado por URL con `http://127.0.0.1:8091/mcp`. No pide clave ni inicio de sesión.
 6. Prueba: pídele a Grokbot que liste los últimos chats de WhatsApp.

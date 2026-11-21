@@ -45,6 +45,12 @@ WHATSAPP_CAPTURE_CALLS=true
 WHATSAPP_AUTO_DOWNLOAD_MEDIA=false
 EOF
   fi
+  # Clave de la base en el Llavero, creada aquí para que el servicio pueda leerla
+  # sin diálogo (un servicio en segundo plano no tiene quién acepte el permiso).
+  if ! security find-generic-password -s whatsapp-grokbot -a default >/dev/null 2>&1; then
+    security add-generic-password -s whatsapp-grokbot -a default -w "$(openssl rand -hex 32)" -T /usr/bin/security \
+      && echo "Clave de cifrado creada en el Llavero."
+  fi
   if [ -z "$UV" ]; then
     echo; echo "Falta 'uv' (lo usa el servidor MCP). Instálalo con:"
     echo "  curl -LsSf https://astral.sh/uv/install.sh | sh"
@@ -54,7 +60,6 @@ EOF
   echo
   echo "Ahora escanea el QR con el teléfono de la línea del bot:"
   echo "  WhatsApp > Dispositivos vinculados > Vincular un dispositivo"
-  echo "Si macOS pide acceso al Llavero, elige «Permitir siempre»."
   echo "Cuando diga que quedó conectado, cierra con Ctrl+C y corre:  ./instalar.sh servicio"
   echo
   cd "$DEST" && exec ./whatsapp-bridge
@@ -114,6 +119,10 @@ print("Conectado:", d.get("connected"), "· Sesión:", d.get("auth_state"), "· 
 
 avisos() {
   URL="${1:-}"
+  if [ -f "$AQUI/SIN_AVISOS" ]; then
+    echo "Este es el kit del computador SECUNDARIO: los avisos van solo en el principal,"
+    echo "para que el bot no responda doble."; exit 2
+  fi
   case "$URL" in https://*|http://*) ;; *) echo "Uso: ./instalar.sh avisos https://la-url-del-webhook"; exit 2 ;; esac
   [ -z "$UV" ] && { echo "Falta uv; corre primero ./instalar.sh"; exit 1; }
   cp "$AQUI/avisador.py" "$DEST/avisador.py"
